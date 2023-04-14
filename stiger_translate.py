@@ -115,11 +115,12 @@ logger.info('开始翻译处理')
 success_cnt = 0
 for item in data:
     # 暂时做2个翻译api，应该够用，不够时候再加 by Patrick
+    targe_string = item[2].replace('&#39;', '\'').replace('�', '\'')
     try:
-        comment_cn = ts.sogou(item[2], sogou_language_dict[item[1]], 'zh-CN')
+        comment_cn = ts.sogou(targe_string, sogou_language_dict[item[1]], 'zh-CN')
         logger.info('处理评论id:' + str(item[0]) + ',使用搜狗API')
     except Exception as e:
-        comment_cn = ts.bing(item[2], bing_language_dict[item[1]], 'zh-CN')
+        comment_cn = ts.bing(targe_string, bing_language_dict[item[1]], 'zh-CN')
         logger.info('处理评论id:' + str(item[0]) + ',使用BingAPI')
     cursor.execute("update amazon_customer_returns_cn set customer_comments_cn = '"
                    + comment_cn
